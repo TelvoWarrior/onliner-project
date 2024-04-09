@@ -1,1 +1,1 @@
-export const TEST_URL = `https://catalog.onliner.by/headphones`
+export const TEST_URL = `https://onliner.by/`

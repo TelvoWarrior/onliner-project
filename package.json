@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "testcafe": "^3.5.0",
-    "testcafe-reporter-acd-html-reporter": "^1.4.4"
+    "testcafe-reporter-acd-html-reporter": "^1.4.4",
+    "testcafe-reporter-log-html-reporter": "^1.0.1"
   }
 }
