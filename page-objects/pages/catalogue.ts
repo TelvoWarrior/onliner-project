@@ -1,6 +1,6 @@
 import { Selector } from "testcafe";
-import { Button } from "../elements/button";
+import { Label } from "../elements/label";
 
 export class Catalogue {
-    public static readonly TITLE = new Button(Selector(`H1`), ``)
+    public static readonly TITLE = new Label(Selector(`H1`), `Заголовок`)
 }
