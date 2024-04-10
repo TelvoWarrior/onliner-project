@@ -1,8 +1,20 @@
 import { Selector } from "testcafe"
-import { Label } from "../elements/label";
+import { Button } from "../elements/button";
+
+export enum MainMenuEnum {
+    CATALOGUE = `Каталог`,
+    NEWS = `Новости`,
+    AUTO = `Автобарахолка`,
+    HOUSES_AND_APPARTEMENTS = `Дома и квартиры`,
+    SERVICES = `Услуги`,
+    FLEA_MARKET = `Барахолка`,
+    FORUM = `Форум`,
+}
 
 export class MainMenu {
-    private static readonly _selectorHelper = Selector(`ul[class*="b-main-navigation"]`).find(`a[class="b-main-navigation__link"]`)
-    public static readonly CATALOGUE = new Label (this._selectorHelper.nth(0), `Catalogue`);
-    //...etc
+    private static _selectorHelper = Selector(`ul[class*="b-main-navigation"]`).find(`a[class="b-main-navigation__link"]`)
+
+    static getMenuItem(item:MainMenuEnum){
+        return new Button(MainMenu._selectorHelper.withText(item),`${item}`);
+    }
 }

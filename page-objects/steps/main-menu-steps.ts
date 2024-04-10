@@ -1,7 +1,7 @@
-import { Label } from "../elements/label";
+import { Button } from "../elements/button";
 
 export class MainMenuStepsImpl {
-    async click(item:Label) {
+    async click(item:Button) {
         await item.click();
     }
 }
