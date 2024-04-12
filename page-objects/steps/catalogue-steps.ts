@@ -5,34 +5,32 @@ import { CatalogueItem } from "../panels/catalogue-item";
 
 export class CatalogueStepsImpl {
 
-    async getItemTitle(index: number) {
-        const item = new CatalogueItem(index);
+    async getItem(index:number) {
+        return new CatalogueItem(index);
+    }
+
+    async getItemTitle(item: CatalogueItem) {
         return await item.itemTitle.text;
     }
 
-    async getItemParameters(index: number) {
-        const item = new CatalogueItem(index);
+    async getItemParameters(item: CatalogueItem) {
         return await item.itemParameters.text;
     }
 
-    async getItemReviewsCount(index: number) {
-        const item = new CatalogueItem(index);
+    async getItemReviewsCount(item: CatalogueItem) {
         return parseFloat((await item.reviewCount.innerText).slice(1, -1));
     }
 
-    async getOffersCount(index: number) {
-        const item = new CatalogueItem(index);
+    async getOffersCount(item: CatalogueItem) {
         return parseFloat(await item.offersButton.innerText);
     }
 
-    async getItemPrice(index: number) {
-        const item = new CatalogueItem(index);
+    async getItemPrice(item: CatalogueItem) {
         let price = parseFloat(((await item.price.innerText).slice(0, -3)).replace(`,`, `.`));
         return price;
     }
 
-    async getUsedItemPrice(index: number) {
-        const item = new CatalogueItem(index);
+    async getUsedItemPrice(item: CatalogueItem) {
         let usedPrice = await item.used.innerText;
         usedPrice = parseFloat(await usedPrice.replace(/[^\d,]/g, "")).toFixed(2);
         usedPrice = parseFloat(usedPrice)
@@ -44,28 +42,28 @@ export class CatalogueStepsImpl {
         await t.expect(await Catalogue.TITLE.innerText).contains(string, `Check that current catalogue page title contains ${string}`);
     }
 
-    async checkItemTitleContainsString(string: string, index: number) {
-        Logger.info(`Check ${index}'th item title contains ${string}`);
-        const itemTitle = await this.getItemTitle(index);
-        await t.expect(await itemTitle).contains(string, `Check that ${index}'th item title contains ${string}`);
+    async checkItemTitleContainsString(string: string, item: CatalogueItem) {
+        Logger.info(`Check ${await this.getItemTitle(item)} item title contains ${string}`);
+        const itemTitle = await this.getItemTitle(item);
+        await t.expect(await itemTitle).contains(string, `Check that ${await this.getItemTitle(item)} item title contains ${string}`);
     }
 
-    async checkItemDescriptionContainsString(string: string, index: number) {
-        Logger.info(`Check ${index}'th item parameters contains ${string}`);
-        const itemParameters = await this.getItemParameters(index);
-        await t.expect(await itemParameters).contains(string, `Check that ${index}'th item parameters contains ${string}`);
+    async checkItemDescriptionContainsString(string: string, item: CatalogueItem) {
+        Logger.info(`Check ${await this.getItemTitle(item)} item parameters contains ${string}`);
+        const itemParameters = await this.getItemParameters(item);
+        await t.expect(await itemParameters).contains(string, `Check that ${await this.getItemTitle(item)} item parameters contains ${string}`);
     }
 
-    async checkItemHasReview(expectedAmount: number = 1, index:number) {
-        Logger.info(`Check ${index}'th item has at least ${expectedAmount} reviews`);
-        const itemReview = await this.getItemReviewsCount(index);
-        await t.expect(itemReview >= expectedAmount).ok(`Check ${index}'th item has at least ${expectedAmount} reviews`);
+    async checkItemHasReview(expectedAmount: number = 1, item: CatalogueItem) {
+        Logger.info(`Check ${await this.getItemTitle(item)} item has at least ${expectedAmount} reviews`);
+        const itemReview = await this.getItemReviewsCount(item);
+        await t.expect(itemReview >= expectedAmount).ok(`Check ${await this.getItemTitle(item)} item has at least ${expectedAmount} reviews`);
     }
 
-    async checkItemHasOffer(expectedAmount: number = 1, index:number) {
-        Logger.info(`Check ${index}'th item has at least ${expectedAmount} offers`);
-        const itemOffer = await this.getItemReviewsCount(index);
-        await t.expect(itemOffer >= expectedAmount).ok(`Check ${index}'th item has at least ${expectedAmount} offers`);
+    async checkItemHasOffer(expectedAmount: number = 1, item: CatalogueItem) {
+        Logger.info(`Check ${await this.getItemTitle(item)} item has at least ${expectedAmount} offers`);
+        const itemOffer = await this.getItemReviewsCount(item);
+        await t.expect(itemOffer >= expectedAmount).ok(`Check ${await this.getItemTitle(item)} item has at least ${expectedAmount} offers`);
     }
 
     async checkGoodsAmountGreaterThan(number: number) {
