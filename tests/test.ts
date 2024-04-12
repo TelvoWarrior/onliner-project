@@ -1,4 +1,4 @@
-import { t } from "testcafe";
+import { Selector, t } from "testcafe";
 import { TEST_URL } from "../test-data/configuration";
 import { Logger } from "testcafe-reporter-acd-html-reporter/lib/Logger";
 import { MainMenuSteps } from "../page-objects/steps/main-menu-steps";
@@ -11,6 +11,7 @@ import { SubCategoryItemSteps } from "../page-objects/steps/subcategory-item-ste
 import { SubCategoryItem } from "../page-objects/panels/subcategory-item";
 import { CatalogueSteps } from "../page-objects/steps/catalogue-steps";
 import { FormPanelSteps } from "../page-objects/steps/form-panel-steps";
+import { CatalogueItem } from "../page-objects/panels/catalogue-item";
 
 fixture(`Onliner Project`)
     .page(TEST_URL);
@@ -28,10 +29,11 @@ test(`Onliner test`, async () => {
     await CatalogueSteps.checkGoodsAmountGreaterThan(5);
     
     for (let i = 0; i < 5; i++) {
-        await CatalogueSteps.checkItemTitleContainsString(`Наушники`, i);
-        await CatalogueSteps.checkItemDescriptionContainsString(`наушники`, i);
-        await CatalogueSteps.checkItemHasReview(1, i);
-        await CatalogueSteps.checkItemHasOffer(1, i);
+        const item = await CatalogueSteps.getItem(i);
+        await CatalogueSteps.checkItemTitleContainsString(`Наушники`, item);
+        await CatalogueSteps.checkItemDescriptionContainsString(`наушники`, item);
+        await CatalogueSteps.checkItemHasReview(1, item);
+        await CatalogueSteps.checkItemHasOffer(1, item);
     }
 
     await FormPanelSteps.checkFormTitleExists(`Цена`);
@@ -44,20 +46,23 @@ test(`Onliner test`, async () => {
     await FormPanelSteps.checkCheckboxExists(`В наличии на складе`);
     await FormPanelSteps.checkSuperCheckboxExists(2);
     await FormPanelSteps.checkCheckboxExists(`С доставкой по Беларуси`);
+    await CatalogueSteps.findUsedOfferAndCheckItsLowerThanNewOne();
     
     Logger.step(2, `Trimmers catalogue check`)
     await MainMenuSteps.click(MainMenu.getMenuItem(MainMenuEnum.CATALOGUE));
     await CategoryItemSteps.click(CategoryItem.getMenuItem(`Дом и сад`));
     await LeftSideMenuSteps.click(LeftSideMenu.getMenuItem(`Садовая техника и инструменты`));
     await SubCategoryItemSteps.click(SubCategoryItem.getMenuItem(`Триммеры`));
+
     await CatalogueSteps.checkPageTitleContainsString(`Триммеры`);
     await CatalogueSteps.checkGoodsAmountGreaterThan(5);
     
     for (let i = 0; i < 5; i++) {
-        await CatalogueSteps.checkItemTitleContainsString(`Триммер`, i);
+        const item = await CatalogueSteps.getItem(i);
+        await CatalogueSteps.checkItemTitleContainsString(`Триммер`, item);
         // await CatalogueSteps.checkItemDescriptionContainsString(`Триммер`, i);
-        await CatalogueSteps.checkItemHasReview(1, i);
-        await CatalogueSteps.checkItemHasOffer(1, i);
+        await CatalogueSteps.checkItemHasReview(1, item);
+        await CatalogueSteps.checkItemHasOffer(1, item);
     }
     
     await FormPanelSteps.checkFormTitleExists(`Цена`);
@@ -70,7 +75,8 @@ test(`Onliner test`, async () => {
     await FormPanelSteps.checkCheckboxExists(`В наличии на складе`);
     await FormPanelSteps.checkSuperCheckboxExists(2);
     await FormPanelSteps.checkCheckboxExists(`С доставкой по Беларуси`);
-    
+    await CatalogueSteps.findUsedOfferAndCheckItsLowerThanNewOne();
+
     await t.debug();
 
 })
