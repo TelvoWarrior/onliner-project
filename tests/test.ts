@@ -1,17 +1,12 @@
-import { Selector, t } from "testcafe";
+import { t } from "testcafe";
 import { TEST_URL } from "../test-data/configuration";
 import { Logger } from "testcafe-reporter-acd-html-reporter/lib/Logger";
-import { MainMenuSteps } from "../page-objects/steps/main-menu-steps";
-import { MainMenu, MainMenuEnum } from "../page-objects/panels/main-menu";
-import { CategoryItemSteps } from "../page-objects/steps/category-item-steps";
+import { MainMenu } from "../page-objects/panels/main-menu";
 import { CategoryItem } from "../page-objects/panels/category-item";
-import { LeftSideMenu } from "../page-objects/panels/leftside-menu";
-import { LeftSideMenuSteps } from "../page-objects/steps/leftside-menu-steps";
-import { SubCategoryItemSteps } from "../page-objects/steps/subcategory-item-steps";
-import { SubCategoryItem } from "../page-objects/panels/subcategory-item";
 import { CatalogueSteps } from "../page-objects/steps/catalogue-steps";
 import { FormPanelSteps } from "../page-objects/steps/form-panel-steps";
-import { CatalogueItem } from "../page-objects/panels/catalogue-item";
+import { CategoryMenuEnum, LeftSideMenuEnum, MainMenuEnum, SubCategoryMenuEnum } from "../page-objects/enums/menu-items-enum";
+import { FormTitleEnum } from "../page-objects/enums/form-title-enum";
 
 fixture(`Onliner Project`)
     .page(TEST_URL);
@@ -21,60 +16,60 @@ test(`Onliner test`, async () => {
     await t.setNativeDialogHandler(() => true);
 
     Logger.step(1, `Headphones catalogue check`)
-    await MainMenuSteps.click(MainMenu.getMenuItem(MainMenuEnum.CATALOGUE));
-    await CategoryItemSteps.click(CategoryItem.getMenuItem(`Электроника`));
-    await LeftSideMenuSteps.click(LeftSideMenu.getMenuItem(`Аудиотехника`));
-    await SubCategoryItemSteps.click(SubCategoryItem.getMenuItem(`Наушники`));
-    await CatalogueSteps.checkPageTitleContainsString(`Наушники`);
+    await MainMenu.getMenuItem(MainMenuEnum.CATALOGUE).click();
+    await CategoryItem.getCategoryItem(CategoryMenuEnum.ELECTRONICS).click();
+    await CategoryItem.getLeftSideItem(LeftSideMenuEnum.AUDIO).click();
+    await CategoryItem.getSubCategoryItem(SubCategoryMenuEnum.HEADPHONES).click();
+    await CatalogueSteps.checkPageTitleContainsString(SubCategoryMenuEnum.HEADPHONES);
     await CatalogueSteps.checkGoodsAmountGreaterThan(5);
     
     for (let i = 0; i < 5; i++) {
         const item = await CatalogueSteps.getItem(i);
-        await CatalogueSteps.checkItemTitleContainsString(`Наушники`, item);
-        await CatalogueSteps.checkItemDescriptionContainsString(`наушники`, item);
-        await CatalogueSteps.checkItemHasReview(1, item);
-        await CatalogueSteps.checkItemHasOffer(1, item);
+        await CatalogueSteps.checkItemTitleContainsString(SubCategoryMenuEnum.HEADPHONES, item);
+        await CatalogueSteps.checkItemDescriptionContainsString(SubCategoryMenuEnum.HEADPHONES, item);
+        await CatalogueSteps.checkItemHasReview(i, item);
+        await CatalogueSteps.checkItemHasOffer(i, item);
     }
 
-    await FormPanelSteps.checkFormTitleExists(`Цена`);
-    await FormPanelSteps.checkFormTitleExists(`Производитель`);
-    await FormPanelSteps.checkFormTitleExists(`Магазины`);
-    await FormPanelSteps.checkFormHasTextfield(`Цена`, 0);
-    await FormPanelSteps.checkFormHasTextfield(`Цена`, 1);
-    await FormPanelSteps.checkFormHasCheckbox(`Производитель`, 0);
-    await FormPanelSteps.checkFormHasCheckbox(`Магазины`, 0);
-    await FormPanelSteps.checkCheckboxExists(`В наличии на складе`);
+    await FormPanelSteps.checkFormTitleExists(FormTitleEnum.PRICE);
+    await FormPanelSteps.checkFormTitleExists(FormTitleEnum.MANUFACTURER);
+    await FormPanelSteps.checkFormTitleExists(FormTitleEnum.STORES);
+    await FormPanelSteps.checkFormHasTextfield(FormTitleEnum.PRICE, 0);
+    await FormPanelSteps.checkFormHasTextfield(FormTitleEnum.PRICE, 1);
+    await FormPanelSteps.checkFormHasCheckbox(FormTitleEnum.MANUFACTURER, 0);
+    await FormPanelSteps.checkFormHasCheckbox(FormTitleEnum.STORES, 0);
+    await FormPanelSteps.checkCheckboxExists(FormTitleEnum.IN_STOCK);
     await FormPanelSteps.checkSuperCheckboxExists(2);
-    await FormPanelSteps.checkCheckboxExists(`С доставкой по Беларуси`);
+    await FormPanelSteps.checkCheckboxExists(FormTitleEnum.NATIONWIDE_SHIPPING);
     await CatalogueSteps.findUsedOfferAndCheckItsLowerThanNewOne();
     
     Logger.step(2, `Trimmers catalogue check`)
-    await MainMenuSteps.click(MainMenu.getMenuItem(MainMenuEnum.CATALOGUE));
-    await CategoryItemSteps.click(CategoryItem.getMenuItem(`Дом и сад`));
-    await LeftSideMenuSteps.click(LeftSideMenu.getMenuItem(`Садовая техника и инструменты`));
-    await SubCategoryItemSteps.click(SubCategoryItem.getMenuItem(`Триммеры`));
+    await MainMenu.getMenuItem(MainMenuEnum.CATALOGUE).click();
+    await CategoryItem.getCategoryItem(CategoryMenuEnum.HOUSE_AND_GARDEN).click();
+    await CategoryItem.getLeftSideItem(LeftSideMenuEnum.GARDEN_TOOLS).click();
+    await CategoryItem.getSubCategoryItem(SubCategoryMenuEnum.TRIMMERS).click();
 
-    await CatalogueSteps.checkPageTitleContainsString(`Триммеры`);
+    await CatalogueSteps.checkPageTitleContainsString(SubCategoryMenuEnum.TRIMMERS);
     await CatalogueSteps.checkGoodsAmountGreaterThan(5);
     
     for (let i = 0; i < 5; i++) {
         const item = await CatalogueSteps.getItem(i);
-        await CatalogueSteps.checkItemTitleContainsString(`Триммер`, item);
+        await CatalogueSteps.checkItemTitleContainsString(SubCategoryMenuEnum.TRIMMERS, item);
         // await CatalogueSteps.checkItemDescriptionContainsString(`Триммер`, i);
-        await CatalogueSteps.checkItemHasReview(1, item);
-        await CatalogueSteps.checkItemHasOffer(1, item);
+        await CatalogueSteps.checkItemHasReview(i, item);
+        await CatalogueSteps.checkItemHasOffer(i, item);
     }
     
-    await FormPanelSteps.checkFormTitleExists(`Цена`);
-    await FormPanelSteps.checkFormTitleExists(`Производитель`);
-    await FormPanelSteps.checkFormTitleExists(`Магазины`);
-    await FormPanelSteps.checkFormHasTextfield(`Цена`, 0);
-    await FormPanelSteps.checkFormHasTextfield(`Цена`, 1);
-    await FormPanelSteps.checkFormHasCheckbox(`Производитель`, 0);
-    await FormPanelSteps.checkFormHasCheckbox(`Магазины`, 0);
-    await FormPanelSteps.checkCheckboxExists(`В наличии на складе`);
+    await FormPanelSteps.checkFormTitleExists(FormTitleEnum.PRICE);
+    await FormPanelSteps.checkFormTitleExists(FormTitleEnum.MANUFACTURER);
+    await FormPanelSteps.checkFormTitleExists(FormTitleEnum.STORES);
+    await FormPanelSteps.checkFormHasTextfield(FormTitleEnum.PRICE, 0);
+    await FormPanelSteps.checkFormHasTextfield(FormTitleEnum.PRICE, 1);
+    await FormPanelSteps.checkFormHasCheckbox(FormTitleEnum.MANUFACTURER, 0);
+    await FormPanelSteps.checkFormHasCheckbox(FormTitleEnum.STORES, 0);
+    await FormPanelSteps.checkCheckboxExists(FormTitleEnum.IN_STOCK);
     await FormPanelSteps.checkSuperCheckboxExists(2);
-    await FormPanelSteps.checkCheckboxExists(`С доставкой по Беларуси`);
+    await FormPanelSteps.checkCheckboxExists(FormTitleEnum.NATIONWIDE_SHIPPING);
     await CatalogueSteps.findUsedOfferAndCheckItsLowerThanNewOne();
 
     await t.debug();

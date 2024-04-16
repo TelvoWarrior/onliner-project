@@ -1,12 +1,7 @@
 import { t } from "testcafe";
-import { Checkbox } from "../elements/checkbox";
-import { Label } from "../elements/label";
 import { FormPanel } from "../panels/form-panel";
 
 export class FormPanelStepsImpl {
-    async click(item: Label | Checkbox) {
-        await item.click();
-    }
 
     async checkFormTitleExists(title: string | number) {
         await t.expect(FormPanel.getFormTitle(title).exists).ok(`Check if form title ${title} is visible`);
