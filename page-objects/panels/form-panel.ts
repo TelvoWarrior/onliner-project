@@ -3,7 +3,7 @@ import { Label } from "../elements/label";
 import { Checkbox } from "../elements/checkbox";
 
 export class FormPanel {
-    private static readonly FORM_TITLE_SELECTOR = Selector(`div[class="catalog-form__label-title"]`);
+    public static readonly FORM_TITLE_SELECTOR = Selector(`div[class="catalog-form__label-title"]`);
     private static readonly CHECKBOX_SELECTOR = Selector(`div[class="catalog-form__checkbox-sign"]`);
     private static readonly SUPER_CHECKBOX = Selector(`div[class="catalog-form__bonus-list"]`).find(`label`).find(`div[class*="faux"]`);
 

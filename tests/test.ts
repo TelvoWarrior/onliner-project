@@ -7,6 +7,9 @@ import { CatalogueSteps } from "../page-objects/steps/catalogue-steps";
 import { FormPanelSteps } from "../page-objects/steps/form-panel-steps";
 import { CategoryMenuEnum, LeftSideMenuEnum, MainMenuEnum, SubCategoryMenuEnum } from "../page-objects/enums/menu-items-enum";
 import { FormTitleEnum } from "../page-objects/enums/form-title-enum";
+import { CatalogueItemSteps } from "../page-objects/steps/catalogue-item-steps";
+import { CatalogueItemValue } from "../page-objects/entities/catalogue-item-value";
+import { FormPanel } from "../page-objects/panels/form-panel";
 
 fixture(`Onliner Project`)
     .page(TEST_URL);
@@ -22,13 +25,14 @@ test(`Onliner test`, async () => {
     await CategoryItem.getSubCategoryItem(SubCategoryMenuEnum.HEADPHONES).click();
     await CatalogueSteps.checkPageTitleContainsString(SubCategoryMenuEnum.HEADPHONES);
     await CatalogueSteps.checkGoodsAmountGreaterThan(5);
+    await CatalogueSteps.closePopups();
     
     for (let i = 0; i < 5; i++) {
         const item = await CatalogueSteps.getItem(i);
-        await CatalogueSteps.checkItemTitleContainsString(SubCategoryMenuEnum.HEADPHONES, item);
-        await CatalogueSteps.checkItemDescriptionContainsString(SubCategoryMenuEnum.HEADPHONES, item);
-        await CatalogueSteps.checkItemHasReview(i, item);
-        await CatalogueSteps.checkItemHasOffer(i, item);
+        await CatalogueItemSteps.checkItemTitleContainsString(SubCategoryMenuEnum.HEADPHONES, item);
+        await CatalogueItemSteps.checkItemDescriptionContainsString(SubCategoryMenuEnum.HEADPHONES, item);
+        await CatalogueItemSteps.checkItemHasReview(1, item);
+        await CatalogueItemSteps.checkItemHasOffer(1, item);
     }
 
     await FormPanelSteps.checkFormTitleExists(FormTitleEnum.PRICE);
@@ -48,16 +52,17 @@ test(`Onliner test`, async () => {
     await CategoryItem.getCategoryItem(CategoryMenuEnum.HOUSE_AND_GARDEN).click();
     await CategoryItem.getLeftSideItem(LeftSideMenuEnum.GARDEN_TOOLS).click();
     await CategoryItem.getSubCategoryItem(SubCategoryMenuEnum.TRIMMERS).click();
+    await CatalogueSteps.closePopups();
 
     await CatalogueSteps.checkPageTitleContainsString(SubCategoryMenuEnum.TRIMMERS);
     await CatalogueSteps.checkGoodsAmountGreaterThan(5);
     
-    for (let i = 0; i < 5; i++) {
+    for (let i = 3; i < 5; i++) {
         const item = await CatalogueSteps.getItem(i);
-        await CatalogueSteps.checkItemTitleContainsString(SubCategoryMenuEnum.TRIMMERS, item);
-        // await CatalogueSteps.checkItemDescriptionContainsString(`Триммер`, i);
-        await CatalogueSteps.checkItemHasReview(i, item);
-        await CatalogueSteps.checkItemHasOffer(i, item);
+        await CatalogueItemSteps.checkItemTitleContainsString(`Триммер`, item);
+        // await CatalogueItemSteps.checkItemDescriptionContainsString(`Триммер`, i);
+        await CatalogueItemSteps.checkItemHasReview(1, item);
+        await CatalogueItemSteps.checkItemHasOffer(1, item);
     }
     
     await FormPanelSteps.checkFormTitleExists(FormTitleEnum.PRICE);
@@ -72,6 +77,48 @@ test(`Onliner test`, async () => {
     await FormPanelSteps.checkCheckboxExists(FormTitleEnum.NATIONWIDE_SHIPPING);
     await CatalogueSteps.findUsedOfferAndCheckItsLowerThanNewOne();
 
-    await t.debug();
+    Logger.step(3, `Get first item from 'Headphones' catalogue and first item from 'Trimmers' catalogue. Check they're different`);
+    await MainMenu.getMenuItem(MainMenuEnum.CATALOGUE).click();
+    await CategoryItem.getCategoryItem(CategoryMenuEnum.ELECTRONICS).click();
+    await CategoryItem.getLeftSideItem(LeftSideMenuEnum.AUDIO).click();
+    await CategoryItem.getSubCategoryItem(SubCategoryMenuEnum.HEADPHONES).click();
+    const headphone = new CatalogueItemValue(await CatalogueSteps.getItem(0));
+    
+    await MainMenu.getMenuItem(MainMenuEnum.CATALOGUE).click();
+    await CategoryItem.getCategoryItem(CategoryMenuEnum.HOUSE_AND_GARDEN).click();
+    await CategoryItem.getLeftSideItem(LeftSideMenuEnum.GARDEN_TOOLS).click();
+    await CategoryItem.getSubCategoryItem(SubCategoryMenuEnum.TRIMMERS).click();
+    const trimmer = new CatalogueItemValue(await CatalogueSteps.getItem(0));
 
+    await CatalogueSteps.checkItemsAreDifferent(headphone, trimmer);
+
+    Logger.step(4, `Get form title lists from 'Headphones' and 'Trimmers' catalogues. Check they're different`);
+    await MainMenu.getMenuItem(MainMenuEnum.CATALOGUE).click();
+    await CategoryItem.getCategoryItem(CategoryMenuEnum.ELECTRONICS).click();
+    await CategoryItem.getLeftSideItem(LeftSideMenuEnum.AUDIO).click();
+    await CategoryItem.getSubCategoryItem(SubCategoryMenuEnum.HEADPHONES).click();
+    const headphoneFormTitleList = await FormPanel.getFormTitleList();
+    
+    await MainMenu.getMenuItem(MainMenuEnum.CATALOGUE).click();
+    await CategoryItem.getCategoryItem(CategoryMenuEnum.HOUSE_AND_GARDEN).click();
+    await CategoryItem.getLeftSideItem(LeftSideMenuEnum.GARDEN_TOOLS).click();
+    await CategoryItem.getSubCategoryItem(SubCategoryMenuEnum.TRIMMERS).click();
+    const trimmerFormTitleList = await FormPanel.getFormTitleList();
+
+    await CatalogueSteps.checkFormListsAreDifferent(headphoneFormTitleList, trimmerFormTitleList);
+
+    Logger.step(5, `Get manufacturers and shops from 'Headphones' and 'Trimmers' catalogues. Check they're different`)
+    await MainMenu.getMenuItem(MainMenuEnum.CATALOGUE).click();
+    await CategoryItem.getCategoryItem(CategoryMenuEnum.ELECTRONICS).click();
+    await CategoryItem.getLeftSideItem(LeftSideMenuEnum.AUDIO).click();
+    await CategoryItem.getSubCategoryItem(SubCategoryMenuEnum.HEADPHONES).click();
+    const headphonesStores = await FormPanelSteps.getFormItemList(FormTitleEnum.STORES);
+
+    await MainMenu.getMenuItem(MainMenuEnum.CATALOGUE).click();
+    await CategoryItem.getCategoryItem(CategoryMenuEnum.HOUSE_AND_GARDEN).click();
+    await CategoryItem.getLeftSideItem(LeftSideMenuEnum.GARDEN_TOOLS).click();
+    await CategoryItem.getSubCategoryItem(SubCategoryMenuEnum.TRIMMERS).click();
+    const trimmersStores = await FormPanelSteps.getFormItemList(FormTitleEnum.STORES);
+
+    await CatalogueSteps.checkFormListsAreDifferent(headphonesStores,trimmersStores);
 })

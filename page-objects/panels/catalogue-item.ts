@@ -1,43 +1,44 @@
-import { Selector } from "testcafe";
 import { Label } from "../elements/label";
 import { Button } from "../elements/button";
+import { CataloguePage } from "../pages/catalogue-page";
 
 export class CatalogueItem {
-    private _itemSelector;
-    private _itemTitle;
-    private _itemParameters;
-    private _reviewCountElement;
-    private _price;
-    private _offersButton;
-    private _used;
+    private _itemTitleLabel:Label;
+    private _itemParametersLabel:Label;
+    private _reviewCountElementLabel:Label;
+    private _priceButton:Button;
+    private _offersButton:Button;
+    private _usedLabel:Label;
 
     constructor(itemIndex: number) {
-        this._itemSelector = Selector(`div[class*="catalog-form__offers-item_primary"]`)
-            .filter((node) => !node.querySelector(`div[title="Товар с платным продвижением"]`)).nth(itemIndex);
-        this._itemTitle = new Label(this._itemSelector.find(`a[class*="catalog-form__link_base-additional"]`), `Item Title`);
-        this._itemParameters = new Label(this._itemSelector.find(`div.catalog-form__offers-part_data .catalog-form__parameter`), `Item Parameters Block`);
-        this._reviewCountElement = new Label(this._itemSelector.find(`span[class="catalog-form__rating-count"]`), `Review count`);
-        this._price = new Button(this._itemSelector.find(`a[href*="prices"][class*="catalog-form__link"]`), `Price`);
-        this._offersButton = new Button(this._itemSelector.find(`a[class*="button"]`), `Offers`);
-        this._used = new Label(this._itemSelector.find(`a[href*="used"]`), `Used`)
+        var pageObj = new CataloguePage();
+        var itemSelector = pageObj.catalogueItemSelector.nth(itemIndex);
+        
+        this._itemTitleLabel = new Label(itemSelector.find(`a[class*="catalog-form__link_base-additional"]`), `Item Title`);
+        this._itemParametersLabel = new Label(itemSelector.find(`div.catalog-form__offers-part_data .catalog-form__parameter`), `Item Parameters Block`);
+        this._reviewCountElementLabel = new Label(itemSelector.find(`span[class="catalog-form__rating-count"]`), `Review count`);
+        this._priceButton = new Button(itemSelector.find(`a[href*="prices"][class*="catalog-form__link"]`), `Price`);
+        this._offersButton = new Button(itemSelector.find(`a[class*="button"]`), `Offers`);
+        this._usedLabel = new Label(itemSelector.find(`a[href*="used"]`), `Used`);
     }
 
-    get itemTitle() {
-        return this._itemTitle;
+    get itemTitleLabel() {
+        return this._itemTitleLabel;
     }
-    get itemParameters() {
-        return this._itemParameters;
+    get itemParametersLabel() {
+        return this._itemParametersLabel;
     }
-    get reviewCount() {
-        return this._reviewCountElement;
+    get reviewCountLabel() {
+        return this._reviewCountElementLabel;
     }
-    get price() {
-        return this._price;
+    get priceButton() {
+        return this._priceButton;
     }
     get offersButton() {
         return this._offersButton;
     }
-    get used() {
-        return this._used;
+    get usedLabel() {
+        return this._usedLabel;
     }
+
 }
