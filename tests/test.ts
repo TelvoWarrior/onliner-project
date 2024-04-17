@@ -6,10 +6,11 @@ import { CategoryItem } from "../page-objects/panels/category-item";
 import { CatalogueSteps } from "../page-objects/steps/catalogue-steps";
 import { FormPanelSteps } from "../page-objects/steps/form-panel-steps";
 import { CategoryMenuEnum, LeftSideMenuEnum, MainMenuEnum, SubCategoryMenuEnum } from "../page-objects/enums/menu-items-enum";
-import { FormTitleEnum } from "../page-objects/enums/form-title-enum";
 import { CatalogueItemSteps } from "../page-objects/steps/catalogue-item-steps";
 import { CatalogueItemValue } from "../page-objects/entities/catalogue-item-value";
 import { FormPanel } from "../page-objects/panels/form-panel";
+import { FormSteps } from "../page-objects/steps/form-steps";
+import { BonusBlockItemEnum, CommonFormBlockTitlesEnum, CommonFormItemsEnum } from "../page-objects/enums/form-enum";
 
 fixture(`Onliner Project`)
     .page(TEST_URL);
@@ -35,16 +36,14 @@ test(`Onliner test`, async () => {
         await CatalogueItemSteps.checkItemHasOffer(1, item);
     }
 
-    await FormPanelSteps.checkFormTitleExists(FormTitleEnum.PRICE);
-    await FormPanelSteps.checkFormTitleExists(FormTitleEnum.MANUFACTURER);
-    await FormPanelSteps.checkFormTitleExists(FormTitleEnum.STORES);
-    await FormPanelSteps.checkFormHasTextfield(FormTitleEnum.PRICE, 0);
-    await FormPanelSteps.checkFormHasTextfield(FormTitleEnum.PRICE, 1);
-    await FormPanelSteps.checkFormHasCheckbox(FormTitleEnum.MANUFACTURER, 0);
-    await FormPanelSteps.checkFormHasCheckbox(FormTitleEnum.STORES, 0);
-    await FormPanelSteps.checkCheckboxExists(FormTitleEnum.IN_STOCK);
-    await FormPanelSteps.checkSuperCheckboxExists(2);
-    await FormPanelSteps.checkCheckboxExists(FormTitleEnum.NATIONWIDE_SHIPPING);
+    await FormSteps.checkFormBlockExists(CommonFormBlockTitlesEnum.PRICE);
+    await FormSteps.checkFormBlockExists(CommonFormBlockTitlesEnum.MANUFACTURER);
+    await FormSteps.checkFormBlockExists(CommonFormBlockTitlesEnum.STORES);
+    await FormSteps.checkFormBlockTextFieldExists(CommonFormBlockTitlesEnum.PRICE);
+    await FormSteps.checkFormBlockItemExists(CommonFormBlockTitlesEnum.MANUFACTURER);
+    await FormSteps.checkFormBlockItemExists(CommonFormBlockTitlesEnum.STORES);
+    await FormSteps.checkCheckboxExists(BonusBlockItemEnum.HOT_PRICE);
+    await FormSteps.checkCheckboxExists(CommonFormItemsEnum.NATIONWIDE_SHIPPING);
     await CatalogueSteps.findUsedOfferAndCheckItsLowerThanNewOne();
     
     Logger.step(2, `Trimmers catalogue check`)
@@ -65,16 +64,14 @@ test(`Onliner test`, async () => {
         await CatalogueItemSteps.checkItemHasOffer(1, item);
     }
     
-    await FormPanelSteps.checkFormTitleExists(FormTitleEnum.PRICE);
-    await FormPanelSteps.checkFormTitleExists(FormTitleEnum.MANUFACTURER);
-    await FormPanelSteps.checkFormTitleExists(FormTitleEnum.STORES);
-    await FormPanelSteps.checkFormHasTextfield(FormTitleEnum.PRICE, 0);
-    await FormPanelSteps.checkFormHasTextfield(FormTitleEnum.PRICE, 1);
-    await FormPanelSteps.checkFormHasCheckbox(FormTitleEnum.MANUFACTURER, 0);
-    await FormPanelSteps.checkFormHasCheckbox(FormTitleEnum.STORES, 0);
-    await FormPanelSteps.checkCheckboxExists(FormTitleEnum.IN_STOCK);
-    await FormPanelSteps.checkSuperCheckboxExists(2);
-    await FormPanelSteps.checkCheckboxExists(FormTitleEnum.NATIONWIDE_SHIPPING);
+    await FormSteps.checkFormBlockExists(CommonFormBlockTitlesEnum.PRICE);
+    await FormSteps.checkFormBlockExists(CommonFormBlockTitlesEnum.MANUFACTURER);
+    await FormSteps.checkFormBlockExists(CommonFormBlockTitlesEnum.STORES);
+    await FormSteps.checkFormBlockTextFieldExists(CommonFormBlockTitlesEnum.PRICE);
+    await FormSteps.checkFormBlockItemExists(CommonFormBlockTitlesEnum.MANUFACTURER);
+    await FormSteps.checkFormBlockItemExists(CommonFormBlockTitlesEnum.STORES);
+    await FormSteps.checkCheckboxExists(BonusBlockItemEnum.HOT_PRICE);
+    await FormSteps.checkCheckboxExists(CommonFormItemsEnum.NATIONWIDE_SHIPPING);
     await CatalogueSteps.findUsedOfferAndCheckItsLowerThanNewOne();
 
     Logger.step(3, `Get first item from 'Headphones' catalogue and first item from 'Trimmers' catalogue. Check they're different`);
@@ -112,13 +109,13 @@ test(`Onliner test`, async () => {
     await CategoryItem.getCategoryItem(CategoryMenuEnum.ELECTRONICS).click();
     await CategoryItem.getLeftSideItem(LeftSideMenuEnum.AUDIO).click();
     await CategoryItem.getSubCategoryItem(SubCategoryMenuEnum.HEADPHONES).click();
-    const headphonesStores = await FormPanelSteps.getFormItemList(FormTitleEnum.STORES);
+    const headphonesStores = await FormPanelSteps.getFormItemList(CommonFormBlockTitlesEnum.STORES);
 
     await MainMenu.getMenuItem(MainMenuEnum.CATALOGUE).click();
     await CategoryItem.getCategoryItem(CategoryMenuEnum.HOUSE_AND_GARDEN).click();
     await CategoryItem.getLeftSideItem(LeftSideMenuEnum.GARDEN_TOOLS).click();
     await CategoryItem.getSubCategoryItem(SubCategoryMenuEnum.TRIMMERS).click();
-    const trimmersStores = await FormPanelSteps.getFormItemList(FormTitleEnum.STORES);
+    const trimmersStores = await FormPanelSteps.getFormItemList(CommonFormBlockTitlesEnum.STORES);
 
     await CatalogueSteps.checkFormListsAreDifferent(headphonesStores,trimmersStores);
 })
