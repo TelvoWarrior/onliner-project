@@ -27,7 +27,7 @@ export class FormStepsImpl {
         return itemsList;
     }
 
-    async getTitleListOfFormBlocks() {
+    async getListOfFormBlocksTitle() {
         const titlesCount = await Form.FORM_BLOCK_TITLE_SELECTOR.count;
         const titlesList: string[] = [];
         for (let i = 0; i < titlesCount; i++) {

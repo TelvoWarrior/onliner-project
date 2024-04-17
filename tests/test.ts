@@ -4,11 +4,9 @@ import { Logger } from "testcafe-reporter-acd-html-reporter/lib/Logger";
 import { MainMenu } from "../page-objects/panels/main-menu";
 import { CategoryItem } from "../page-objects/panels/category-item";
 import { CatalogueSteps } from "../page-objects/steps/catalogue-steps";
-import { FormPanelSteps } from "../page-objects/steps/form-panel-steps";
 import { CategoryMenuEnum, LeftSideMenuEnum, MainMenuEnum, SubCategoryMenuEnum } from "../page-objects/enums/menu-items-enum";
 import { CatalogueItemSteps } from "../page-objects/steps/catalogue-item-steps";
 import { CatalogueItemValue } from "../page-objects/entities/catalogue-item-value";
-import { FormPanel } from "../page-objects/panels/form-panel";
 import { FormSteps } from "../page-objects/steps/form-steps";
 import { BonusBlockItemEnum, CommonFormBlockTitlesEnum, CommonFormItemsEnum } from "../page-objects/enums/form-enum";
 
@@ -94,13 +92,13 @@ test(`Onliner test`, async () => {
     await CategoryItem.getCategoryItem(CategoryMenuEnum.ELECTRONICS).click();
     await CategoryItem.getLeftSideItem(LeftSideMenuEnum.AUDIO).click();
     await CategoryItem.getSubCategoryItem(SubCategoryMenuEnum.HEADPHONES).click();
-    const headphoneFormTitleList = await FormPanel.getFormTitleList();
+    const headphoneFormTitleList = await FormSteps.getListOfFormBlocksTitle();
     
     await MainMenu.getMenuItem(MainMenuEnum.CATALOGUE).click();
     await CategoryItem.getCategoryItem(CategoryMenuEnum.HOUSE_AND_GARDEN).click();
     await CategoryItem.getLeftSideItem(LeftSideMenuEnum.GARDEN_TOOLS).click();
     await CategoryItem.getSubCategoryItem(SubCategoryMenuEnum.TRIMMERS).click();
-    const trimmerFormTitleList = await FormPanel.getFormTitleList();
+    const trimmerFormTitleList = await FormSteps.getListOfFormBlocksTitle();
 
     await CatalogueSteps.checkFormListsAreDifferent(headphoneFormTitleList, trimmerFormTitleList);
 
@@ -109,13 +107,13 @@ test(`Onliner test`, async () => {
     await CategoryItem.getCategoryItem(CategoryMenuEnum.ELECTRONICS).click();
     await CategoryItem.getLeftSideItem(LeftSideMenuEnum.AUDIO).click();
     await CategoryItem.getSubCategoryItem(SubCategoryMenuEnum.HEADPHONES).click();
-    const headphonesStores = await FormPanelSteps.getFormItemList(CommonFormBlockTitlesEnum.STORES);
+    const headphonesStores = await FormSteps.getFormBlockItemsList(CommonFormBlockTitlesEnum.STORES);
 
     await MainMenu.getMenuItem(MainMenuEnum.CATALOGUE).click();
     await CategoryItem.getCategoryItem(CategoryMenuEnum.HOUSE_AND_GARDEN).click();
     await CategoryItem.getLeftSideItem(LeftSideMenuEnum.GARDEN_TOOLS).click();
     await CategoryItem.getSubCategoryItem(SubCategoryMenuEnum.TRIMMERS).click();
-    const trimmersStores = await FormPanelSteps.getFormItemList(CommonFormBlockTitlesEnum.STORES);
+    const trimmersStores = await FormSteps.getFormBlockItemsList(CommonFormBlockTitlesEnum.STORES);
 
     await CatalogueSteps.checkFormListsAreDifferent(headphonesStores,trimmersStores);
 })
